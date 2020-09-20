@@ -89,13 +89,11 @@ class UserService {
     }
   }
 
-  Future<Map<String, dynamic>> getUser(String id) async {
+  Future getUser(String id) async {
     try {
       final result = await this._apiService.methodGet("/user/$id");
       if (result.statusCode < 400) {
-        final json = jsonDecode(result.body);
-        final data = Map<String, dynamic>.from(json);
-        return data;
+        return result;
       }
       throw result;
     } catch (err) {

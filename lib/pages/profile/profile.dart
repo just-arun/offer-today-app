@@ -112,11 +112,7 @@ class _ProfilePageState extends State<ProfilePage> with UserMixin {
   }
 
   void _savePorfile() async {
-    final data = await await UserService()
-        .updateMinilalProfile(_imageUrl, _userName.text, _email.text);
-    if (data.statusCode == 200) {
-      this.getProfile();
-    }
+    print("save profile");
   }
 
   void initFun() async {

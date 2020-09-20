@@ -41,7 +41,6 @@ class PostSearch extends SearchDelegate<String> with PostMixin {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // final suggestionList = query.isEmpty ? recentCities : users;
     return FutureBuilder(
         future: PostService().search(query),
         builder: (context, snapshot) {
@@ -88,12 +87,5 @@ class PostSearch extends SearchDelegate<String> with PostMixin {
             ),
           );
         });
-    // ListView.builder(
-    //   itemBuilder: (context, index) => ListTile(
-    //     leading: Icon(Icons.location_city),
-    //     title: Text(suggestionList[index]),
-    //   ),
-    //   itemCount: suggestionList.length,
-    // );
   }
 }

@@ -167,7 +167,6 @@ mixin UserMixin {
       final result = await UserService().getAllUsers();
       final json = jsonDecode(result.body)["data"];
       print(json);
-      
       final data = List<Map<String, dynamic>>.from(json);
       return data;
     } catch (err) {
@@ -175,5 +174,18 @@ mixin UserMixin {
       throw err;
     }
   }
-}
 
+  Future<Map<String, dynamic>> getOneUser(String id) async {
+    try {
+      final result = await UserService().getUser(id);
+      print(result.body);
+      final json = jsonDecode(result.body);
+      final Map<String, dynamic> data = json["data"];
+      print(data);
+      return data;
+    } catch (err) {
+      print(err);
+      throw err;
+    }
+  }
+}
