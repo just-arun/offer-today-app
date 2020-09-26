@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:offer_today/mixins/user_mixin.dart';
 import 'package:offer_today/pages/post/post-detail.dart';
 import 'package:offer_today/pages/profile/user-detail/user-detail.dart';
+import 'package:offer_today/pages/profile/user-fav/user-fav.dart';
 import 'package:offer_today/pages/profile/user-posts/user-posts.dart';
 import 'package:offer_today/services/config/app_config.dart';
 import 'package:offer_today/services/modules/image_upload_service.dart';
@@ -117,9 +118,15 @@ class _ProfilePageState extends State<ProfilePage> with UserMixin {
 
   void initFun() async {
     setState(() {
-      tabList.add(UserDetail(userID: this.userID));
-      tabList.add(Center(child: Text("data 2")));
-      tabList.add(Center(child: Text("data 3")));
+      tabList.add(UserDetail(
+        userID: this.userID,
+      ));
+      tabList.add(UserFav(
+        this.userID,
+      ));
+      tabList.add(UserPosts(
+        this.userID,
+      ));
     });
     SharedPreferences pref = await SharedPreferences.getInstance();
     this.getProfile();

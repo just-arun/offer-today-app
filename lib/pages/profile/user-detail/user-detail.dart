@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:offer_today/mixins/user_mixin.dart';
@@ -65,25 +67,6 @@ class _UserDetailState extends State<UserDetail> with UserMixin {
       final contactPersonDescription = res["contactPersonDescription"];
       final cretedAt = res["cretedAt"];
       final updatedAt = res["updatedAt"];
-      print("""
-      id: $id
-      userName: $userName
-      email: $email
-      imageUrl: $imageUrl
-      registrationNumber: $registrationNumber
-      address: $address
-      poBox: $poBox
-      phone: $phone
-      fax: $fax
-      mobile: $mobile
-      registrationDate: $registrationDate
-      subscription: $subscription
-      paymentTerms: $paymentTerms
-      contactPerson: $contactPerson
-      contactPersonDescription: $contactPersonDescription
-      cretedAt: $cretedAt
-      updatedAt: $updatedAt
-      """);
       setState(() {
         _id = TextEditingController(text: id);
         _userName = TextEditingController(text: userName);
@@ -110,7 +93,33 @@ class _UserDetailState extends State<UserDetail> with UserMixin {
   }
 
   void _savePorfile() async {
-    print("save profile");
+    try {
+      Map<String, dynamic> data = {
+        "userName": _userName.text,
+        "email": _email.text,
+        "imageUrl": _imageUrl.text,
+        "registrationNumber": _registrationNumber.text,
+        "address": _address.text,
+        "poBox": _poBox.text,
+        "phone": _phone.text,
+        "fax": _fax.text,
+        "mobile": _mobile.text,
+        "registrationDate": _registrationDate.text,
+        "subscription": _subscription.text,
+        "paymentTerms": _paymentTerms.text,
+        "contactPerson": _contactPerson.text,
+        "contactPersonDescription": _contactPersonDescription.text,
+        "cretedAt": _cretedAt.text,
+        "updatedAt": _updatedAt.text,
+      };
+      final json = jsonEncode(data);
+      if (this._formKey.currentState.validate()) {
+        final res = await this.updateProfile(json);
+        print(res);
+      }
+    } catch (err) {
+      print(err);
+    }
   }
 
   Widget _editButton() {
@@ -239,12 +248,14 @@ class InputField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          "$label",
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            fontSize: 23.0,
-            color: Colors.grey,
+        Container(
+          child: Text(
+            "$label",
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              fontSize: 23.0,
+              color: Colors.grey,
+            ),
           ),
         ),
         edit

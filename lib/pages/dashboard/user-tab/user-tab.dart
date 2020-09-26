@@ -55,6 +55,7 @@ class _UserTabeState extends State<UserTabe> with UserMixin {
       child: ListView(
           children: users
               .map((item) => UserListTile(
+                    userId: item["id"],
                     userName: item["userName"],
                     email: item["email"],
                     phoneNumber: item["phone"],

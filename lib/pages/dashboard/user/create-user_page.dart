@@ -52,9 +52,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
             controller: controll,
             validator: validator,
             decoration: InputDecoration(
-              hintText: "$label",
-              border: OutlineInputBorder()
-            ),
+                hintText: "$label", border: OutlineInputBorder()),
           ),
           SizedBox(
             height: 20.0,
@@ -82,6 +80,16 @@ class _CreateUserPageState extends State<CreateUserPage> {
   }
 
   void _savPublisher() async {}
+
+  void initFun() async {
+    print(selectedDate.toIso8601String());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this.initFun();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -72,4 +72,29 @@ mixin PostMixin {
       throw err;
     }
   }
+
+  Future<Map<String, dynamic>> getOnePost(String id) async {
+    try {
+      final res = await PostService().getOne(id);
+      final json = jsonDecode(res.body);
+      print(json);
+      final data = Map<String, dynamic>.from(json["data"]);
+      return data;
+    } catch (err) {
+      print(err);
+      throw err;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getComments(String id) async {
+    try {
+      final res = await PostService().getComments(id);
+      final json = jsonDecode(res.body);
+      final data = List<Map<String, dynamic>>.from(json["data"]);
+      return data;
+    } catch(err) {
+      throw err;
+    }
+  }
+
 }

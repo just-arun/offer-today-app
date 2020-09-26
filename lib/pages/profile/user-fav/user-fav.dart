@@ -4,14 +4,14 @@ import 'package:offer_today/services/modules/user_service.dart';
 import 'package:offer_today/widgets/PostWidget/PostWidget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class UserPosts extends StatefulWidget {
+class UserFav extends StatefulWidget {
   final String userID;
-  const UserPosts(this.userID);
+  const UserFav(this.userID);
   @override
-  _UserPostsState createState() => _UserPostsState();
+  _UserFavState createState() => _UserFavState();
 }
 
-class _UserPostsState extends State<UserPosts> {
+class _UserFavState extends State<UserFav> {
   List<Map<String, dynamic>> _posts = [];
   int _page = 1;
   RefreshController _refreshController =

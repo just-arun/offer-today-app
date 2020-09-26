@@ -19,21 +19,12 @@ class UserService {
     }
   }
 
-  Future<http.Response> updateMinilalProfile(
-    String imageUrl,
-    String userName,
-    String email,
-  ) async {
+  Future<http.Response> updateMinilalProfile(dynamic data) async {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       final String id = pref.getString("uid");
       final result = await this._apiService.methodPut(
-          "/user/$id",
-          jsonEncode({
-            "imageUrl": imageUrl,
-            "userName": userName,
-            "email": email,
-          }));
+          "/user/$id",data);
       if (result.statusCode < 400) {
         return result;
       }
@@ -77,6 +68,22 @@ class UserService {
     try {
       final result =
           await this._apiService.methodGet("/user/$userID/posts?page=$page");
+      if (result.statusCode < 400) {
+        final json = jsonDecode(result.body);
+        final data = List<Map<String, dynamic>>.from(json["data"]);
+        return data;
+      }
+      throw result;
+    } catch (err) {
+      print(err);
+      throw err;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fav(String userID, int page) async {
+    try {
+      final result =
+          await this._apiService.methodGet("/user/$userID/fav?page=$page");
       if (result.statusCode < 400) {
         final json = jsonDecode(result.body);
         final data = List<Map<String, dynamic>>.from(json["data"]);

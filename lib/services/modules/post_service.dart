@@ -102,4 +102,28 @@ class PostService {
       throw err;
     }
   }
+
+  Future getOne(String id) async {
+    try {
+      final res = await this._apiService.methodGet("/posts/$id");
+      if (res.statusCode < 400) {
+        return res;
+      }
+      throw res;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  Future getComments(String id) async {
+    try {
+      final res = await this._apiService.methodGet("/posts/$id/comments");
+      if (res.statusCode < 400) {
+        return res;
+      }
+      throw res;
+    } catch (err) {
+      throw err;
+    }
+  }
 }

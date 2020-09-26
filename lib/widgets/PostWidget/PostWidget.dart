@@ -40,22 +40,12 @@ class PostWidget extends StatelessWidget {
 
   void _showMore(context) {
     print("title: $title, description: $description");
-    Navigator.of(context).pushNamed(PostDetailPage.routeName,
-        arguments: PostDetailValue(
-          id: this.id,
-          title: this.title,
-          description: this.description,
-          imageUrl: this.imageUrl,
-          owner: this.owner,
-          enquiryCount: this.enquiryCount,
-          likes: this.likes,
-          likeCount: this.likeCount,
-          status: this.status,
-          createdAt: this.createdAt,
-          updatedAt: this.updatedAt,
-          gridLayout: this.gridLayout,
-          userId: this.userId,
-        ));
+    Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => PostDetailPage(
+              id: id,
+            ),
+          ),);
   }
 
   Widget _buttons({
