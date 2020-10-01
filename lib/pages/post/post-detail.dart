@@ -29,19 +29,28 @@ class _PostDetailPageState extends State<PostDetailPage> with PostMixin {
   int userType = 0;
   List<Map<String, dynamic>> _comments = [];
 
+  void _getComment() async {
+    try {
+      final comments = await this.getComments(widget.id);
+      setState(() {
+        _comments = comments;
+      });
+    } catch (err) {
+      print(err);
+    }
+  }
+
   void initFun() async {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       final userID = pref.getString("uid");
       final uType = pref.getInt("userType");
       final post = await this.getOnePost(widget.id);
-      final comments = await this.getComments(widget.id);
-      print(comments);
+      this._getComment();
       setState(() {
         data = post;
         this.userID = userID;
         this.userType = uType;
-        _comments = comments;
       });
     } catch (err) {
       print(err);
@@ -114,7 +123,10 @@ class _PostDetailPageState extends State<PostDetailPage> with PostMixin {
                           ),
                         ],
                       )),
-                  CreateComment(id: widget.id),
+                  CreateComment(
+                    id: widget.id,
+                    refreshComment: _getComment,
+                  ),
                   Column(
                     children: _comments
                         .map(

@@ -76,7 +76,7 @@ class HttpService {
         return res;
       }
       if (res.statusCode == 401) {
-        final resData = await _updateToken();
+        final resData = await this._updateToken();
         if (resData) {
           return this.methodGet(path);
         } else {

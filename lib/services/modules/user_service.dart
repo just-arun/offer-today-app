@@ -23,8 +23,7 @@ class UserService {
     try {
       SharedPreferences pref = await SharedPreferences.getInstance();
       final String id = pref.getString("uid");
-      final result = await this._apiService.methodPut(
-          "/user/$id",data);
+      final result = await this._apiService.methodPut("/user/$id", data);
       if (result.statusCode < 400) {
         return result;
       }
@@ -105,6 +104,23 @@ class UserService {
       throw result;
     } catch (err) {
       print(err);
+      throw err;
+    }
+  }
+
+  Future<Map<String, dynamic>> create(Map<String, dynamic> inputData) async {
+    try {
+      final result = await this._apiService.methodPost(
+            "/user",
+            jsonEncode(inputData),
+          );
+      if (result.statusCode < 400) {
+        final json = jsonDecode(result.body)["data"];
+        final data = Map<String, dynamic>.from(json);
+        return data;
+      }
+      throw result;
+    } catch (err) {
       throw err;
     }
   }

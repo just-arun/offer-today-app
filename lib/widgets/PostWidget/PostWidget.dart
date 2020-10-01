@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:offer_today/pages/post/post-detail.dart';
 import 'package:offer_today/services/config/app_config.dart';
+import 'package:offer_today/services/modules/post_service.dart';
 import 'package:offer_today/util/rout-navigation.dart';
+import 'package:offer_today/util/statefull-wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PostWidget extends StatelessWidget {
+class PostWidget extends StatefulWidget {
   final String id;
   final String title;
   final String description;
@@ -19,9 +22,6 @@ class PostWidget extends StatelessWidget {
   final String updatedAt;
   final bool gridLayout;
   final String userId;
-
-  bool _liked = false;
-  bool _bookmarked = false;
 
   PostWidget(
       {this.id,
@@ -38,14 +38,41 @@ class PostWidget extends StatelessWidget {
       this.gridLayout,
       this.userId});
 
+  @override
+  _PostWidgetState createState() => _PostWidgetState();
+}
+
+class _PostWidgetState extends State<PostWidget> {
+  bool _liked = false;
+
+  bool _bookmarked = false;
+
   void _showMore(context) {
-    print("title: $title, description: $description");
+    print("title: ${widget.title}, description: ${widget.description}");
     Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PostDetailPage(
-              id: id,
-            ),
-          ),);
+      MaterialPageRoute(
+        builder: (context) => PostDetailPage(
+          id: widget.id,
+        ),
+      ),
+    );
+  }
+
+  void _createEnquiry() async {
+    try {
+      final Email email = Email(
+        body: 'Email body',
+        subject: 'Email subject',
+        recipients: ['arunberry47@gmail.com'],
+        cc: ['arunberry47@gmail.com'],
+        bcc: ['arunberry47@gmail.com'],
+        isHTML: false,
+      );
+
+      await FlutterEmailSender.send(email);
+    } catch (err) {
+      print(err);
+    }
   }
 
   Widget _buttons({
@@ -61,7 +88,7 @@ class PostWidget extends StatelessWidget {
         child: Material(
           color: Colors.white,
           child: Container(
-            height: gridLayout ? 50.0 : 35,
+            height: widget.gridLayout ? 50.0 : 35,
             child: InkWell(
               onTap: onTap,
               child: Icon(
@@ -77,8 +104,45 @@ class PostWidget extends StatelessWidget {
 
   Future<bool> likedCondition() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    final bool like = pref.getStringList("_liked").contains(this.id);
+    final bool like = pref.getStringList("_liked").contains(this.widget.id);
     return like;
+  }
+
+  void _toggleLike(setState) async {
+    try {
+      print(this._liked);
+      if (this._liked) {
+        setState(() {
+          this._liked = false;
+        });
+      } else {
+        setState(() {
+          this._liked = true;
+        });
+      }
+      await PostService().likUnlikePost(widget.id, this._liked);
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  void _checkLiked() async {
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      final uid = pref.getString("uid");
+      bool liked = this.widget.likes.contains(uid);
+      setState(() {
+        _liked = liked;
+      });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this._checkLiked();
   }
 
   @override
@@ -97,7 +161,7 @@ class PostWidget extends StatelessWidget {
               height: double.infinity,
               width: double.infinity,
               child: Image.network(
-                "${Config.baseUrl}/$imageUrl",
+                "${Config.baseUrl}/${widget.imageUrl}",
                 fit: BoxFit.cover,
               ),
             ),
@@ -114,7 +178,7 @@ class PostWidget extends StatelessWidget {
                   color: Colors.red,
                 ),
                 child: Text(
-                  "$title",
+                  "${widget.title}",
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.poppins(
                       fontWeight: FontWeight.bold, color: Colors.white),
@@ -131,8 +195,8 @@ class PostWidget extends StatelessWidget {
                   children: <Widget>[
                     _buttons(
                         icon: Icons.favorite,
-                        onTap: () {},
-                        active: false,
+                        onTap: () => _toggleLike(setState),
+                        active: _liked,
                         name: "ADD TO FAVORITE"),
                     _buttons(
                         icon: Icons.remove_red_eye,
@@ -141,7 +205,7 @@ class PostWidget extends StatelessWidget {
                         name: "POST DETAIL"),
                     _buttons(
                         icon: Icons.format_quote,
-                        onTap: () {},
+                        onTap: _createEnquiry,
                         active: false,
                         name: "MAKE QUOTE"),
                   ],

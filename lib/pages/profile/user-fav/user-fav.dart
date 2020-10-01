@@ -19,7 +19,7 @@ class _UserFavState extends State<UserFav> {
 
   void initFun() async {
     try {
-      final posts = await UserService().posts(widget.userID, _page);
+      final posts = await UserService().fav(widget.userID, _page);
       setState(() {
         _posts = posts;
       });
@@ -42,7 +42,7 @@ class _UserFavState extends State<UserFav> {
     setState(() {
       _page += 1;
     });
-    final posts = await UserService().posts(widget.userID, _page);
+    final posts = await UserService().fav(widget.userID, _page);
     posts.forEach((ele) {
       setState(() {
         _posts.add(ele);

@@ -126,4 +126,33 @@ class PostService {
       throw err;
     }
   }
+
+  Future createComment(Map<String, String> comment) async {
+    try {
+      final res = await this._apiService.methodPost(
+            "/comments",
+            jsonEncode(comment),
+          );
+      if (res.statusCode < 400) {
+        return res;
+      }
+      throw res;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  Future likUnlikePost(String id, bool like) async {
+    try {
+      final res = await this._apiService.methodPost(
+          "/posts/$id/${like ? 'addlike' : 'removelike'}",
+          jsonEncode({"data": 1}));
+      if (res.statusCode < 400) {
+        return res;
+      }
+      throw res;
+    } catch (err) {
+      throw err;
+    }
+  }
 }

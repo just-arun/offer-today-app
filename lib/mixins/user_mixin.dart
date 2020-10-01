@@ -180,4 +180,5 @@ mixin UserMixin {
       throw err;
     }
   }
+
 }

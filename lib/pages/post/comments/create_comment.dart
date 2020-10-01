@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:offer_today/services/modules/post_service.dart';
 import 'package:offer_today/widgets/users/avatar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateComment extends StatefulWidget {
   final String id;
-  CreateComment({@required this.id});
+  final void Function() refreshComment;
+  CreateComment({@required this.id, @required this.refreshComment});
 
   @override
   _CreateCommentState createState() => _CreateCommentState();
@@ -17,6 +19,25 @@ class _CreateCommentState extends State<CreateComment> {
     "imageUrl": null,
   };
   bool _createComment = false;
+  TextEditingController _comment = TextEditingController(text: "");
+
+  void _saveComment() async {
+    try {
+      var data = {
+        "post": widget.id,
+        "comment": _comment.text,
+      };
+      final res = await PostService().createComment(data);
+      print(res);
+      setState(() {
+        _createComment = false;
+        _comment = TextEditingController(text: "");
+      });
+      widget.refreshComment();
+    } catch (err) {
+      print(err);
+    }
+  }
 
   void iniiFun() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -56,44 +77,52 @@ class _CreateCommentState extends State<CreateComment> {
               ),
             ),
           ))
-        : SizedBox();
-    // : Expanded(
-    //     child: Container(
-    //     child: Column(
-    //       children: <Widget>[
-    //         Container(
-    //           constraints: BoxConstraints(
-    //             maxWidth: double.infinity,
-    //           ),
-    //           margin: EdgeInsets.only(right: 20.0),
-    //           child: TextField(
-    //             maxLines: 5,
-    //             decoration: InputDecoration(
-    //                 border: OutlineInputBorder(),
-    //                 hintMaxLines: 200,
-    //                 hintText: "Your Comment"),
-    //           ),
-    //         ),
-    //         Row(
-    //           children: <Widget>[
-    //             SizedBox(),
-    //             RawMaterialButton(
-    //               onPressed: () {
-    //                 setState(() {
-    //                   _createComment = false;
-    //                 });
-    //               },
-    //               child: Text("CANCLE"),
-    //             ),
-    //             RaisedButton(
-    //               onPressed: () {},
-    //               child: Text("SEND"),
-    //             )
-    //           ],
-    //         )
-    //       ],
-    //     ),
-    //   ));
+        : Expanded(
+            child: Container(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: double.infinity,
+                  ),
+                  margin: EdgeInsets.only(right: 20.0),
+                  child: TextField(
+                    controller: _comment,
+                    maxLines: 5,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintMaxLines: 200,
+                        hintText: "Your Comment"),
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: SizedBox()),
+                    RawMaterialButton(
+                      onPressed: () {
+                        setState(() {
+                          _createComment = false;
+                          _comment = TextEditingController(text: "");
+                        });
+                      },
+                      child: Text("CANCLE"),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    RaisedButton(
+                      onPressed: _saveComment,
+                      child: Text("SEND"),
+                    ),
+                    SizedBox(
+                      width: 20.0,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ));
   }
 
   @override

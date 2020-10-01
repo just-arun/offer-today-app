@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
     this._getTags();
     setState(() {
       _page = 1;
+      this._posts = [];
     });
     final res = await this.getPosts(this._page, this._selectedTag);
     setState(() {
@@ -126,9 +127,10 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
   }
 
   void _profilePage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => ProfilePage(userID: _uid,))
-    );
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ProfilePage(
+              userID: _uid,
+            )));
   }
 
   void _toggleFilterFun() {

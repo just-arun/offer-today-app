@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:offer_today/mixins/posts_mixin.dart';
+import 'package:offer_today/pages/post/post-detail.dart';
 import 'package:offer_today/services/modules/post_service.dart';
 
 class PostSearch extends SearchDelegate<String> with PostMixin {
@@ -66,7 +67,15 @@ class PostSearch extends SearchDelegate<String> with PostMixin {
                 children: data
                     .map(
                       (item) => ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => PostDetailPage(
+                                id: item["id"],
+                              ),
+                            ),
+                          );
+                        },
                         title: Text("${item['title']}"),
                       ),
                     )
