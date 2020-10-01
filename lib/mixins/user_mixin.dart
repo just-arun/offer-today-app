@@ -98,9 +98,9 @@ mixin UserMixin {
     }
   }
 
-  Future updateProfile(dynamic data) async {
+  Future updateProfile(String userID, dynamic data) async {
     try {
-      final res = await UserService().updateMinilalProfile(data);
+      final res = await UserService().updateMinilalProfile(userID, data);
       if (res.statusCode < 400) {
         return res;
       }

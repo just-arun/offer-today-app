@@ -39,6 +39,7 @@ class _UserDetailState extends State<UserDetail> with UserMixin {
   TextEditingController _contactPersonDescription =
       TextEditingController(text: "");
   int _userStatus;
+  bool activeStatus = false;
   int _userType;
   TextEditingController _cretedAt = TextEditingController(text: "");
   TextEditingController _updatedAt = TextEditingController(text: "");
@@ -67,6 +68,16 @@ class _UserDetailState extends State<UserDetail> with UserMixin {
       final contactPersonDescription = res["contactPersonDescription"];
       final cretedAt = res["cretedAt"];
       final updatedAt = res["updatedAt"];
+      print("[user status:] ${res['userStatus'] > 0}");
+      if (res["userStatus"] > 0) {
+        setState(() {
+          activeStatus = true;
+        });
+      } else {
+        setState(() {
+          activeStatus = false;
+        });
+      }
       setState(() {
         _id = TextEditingController(text: id);
         _userName = TextEditingController(text: userName);
@@ -86,6 +97,7 @@ class _UserDetailState extends State<UserDetail> with UserMixin {
             TextEditingController(text: contactPersonDescription);
         _cretedAt = TextEditingController(text: cretedAt);
         _updatedAt = TextEditingController(text: updatedAt);
+        _userStatus = res["userStatus"];
       });
     } catch (err) {
       print(err);
@@ -105,20 +117,18 @@ class _UserDetailState extends State<UserDetail> with UserMixin {
         "fax": _fax.text,
         "mobile": _mobile.text,
         "registrationDate": _registrationDate.text,
-        "subscription": _subscription.text,
-        "paymentTerms": _paymentTerms.text,
         "contactPerson": _contactPerson.text,
         "contactPersonDescription": _contactPersonDescription.text,
-        "cretedAt": _cretedAt.text,
-        "updatedAt": _updatedAt.text,
+        "userStatus": _userStatus,
       };
       final json = jsonEncode(data);
+      print("[JSON DATA] $json");
       if (this._formKey.currentState.validate()) {
-        final res = await this.updateProfile(json);
+        final res = await this.updateProfile(widget.userID, json);
         print(res);
       }
     } catch (err) {
-      print(err);
+      print("[err] $err");
     }
   }
 
@@ -209,6 +219,33 @@ class _UserDetailState extends State<UserDetail> with UserMixin {
                             label: "Contact Person Detail",
                             controller: _contactPersonDescription,
                             edit: _edit),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text("Status Active:"),
+                            Expanded(child: Container()),
+                            Switch(
+                                value: activeStatus,
+                                onChanged: (val) {
+                                  if (!_edit) {
+                                    return;
+                                  }
+                                  activeStatus = val;
+                                  if (val) {
+                                    setState(() {
+                                      _userStatus = 1;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _userStatus = 0;
+                                    });
+                                  }
+                                })
+                          ],
+                        ),
+                        SizedBox(
+                          height: 100.0,
+                        )
                       ],
                     )),
               )

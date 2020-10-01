@@ -245,9 +245,9 @@ class LoginFormCard extends StatelessWidget {
   String _title() {
     switch (type) {
       case LoginFormCardType.login:
-        return "Signin";
+        return "Sign In";
       case LoginFormCardType.register:
-        return "Signup";
+        return "Sign Up";
       case LoginFormCardType.forgotPassword:
         return "Forgot Password";
       case LoginFormCardType.updatePassword:

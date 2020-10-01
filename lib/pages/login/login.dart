@@ -30,9 +30,9 @@ class _LoginPageState extends State<LoginPage> with UserMixin {
       case LoginFormCardType.forgotPassword:
         return "SEND OTP";
       case LoginFormCardType.login:
-        return "SIGNIN";
+        return "SIGN IN";
       case LoginFormCardType.register:
-        return "SIGNUP";
+        return "SIGN UP";
       case LoginFormCardType.updatePassword:
         return "UPDARE";
     }

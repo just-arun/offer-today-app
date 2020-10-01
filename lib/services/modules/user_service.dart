@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -19,11 +21,9 @@ class UserService {
     }
   }
 
-  Future<http.Response> updateMinilalProfile(dynamic data) async {
+  Future<http.Response> updateMinilalProfile(String userID, dynamic data) async {
     try {
-      SharedPreferences pref = await SharedPreferences.getInstance();
-      final String id = pref.getString("uid");
-      final result = await this._apiService.methodPut("/user/$id", data);
+      final result = await this._apiService.methodPut("/user/$userID", data);
       if (result.statusCode < 400) {
         return result;
       }
@@ -108,19 +108,24 @@ class UserService {
     }
   }
 
-  Future<Map<String, dynamic>> create(Map<String, dynamic> inputData) async {
+  Future<dynamic> create(dynamic inputData) async {
     try {
       final result = await this._apiService.methodPost(
             "/user",
-            jsonEncode(inputData),
+            inputData,
           );
+      print(result.statusCode);
       if (result.statusCode < 400) {
-        final json = jsonDecode(result.body)["data"];
-        final data = Map<String, dynamic>.from(json);
-        return data;
+        // final json = jsonDecode(result.body)["data"];
+        // final data = Map<String, dynamic>.from(json);
+        return "data";
       }
       throw result;
+    } on HttpException catch (err) {
+      print(err.message);
+      throw err;
     } catch (err) {
+      print(err);
       throw err;
     }
   }
