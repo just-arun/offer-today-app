@@ -260,6 +260,43 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
     }
   }
 
+  Widget _postItems() {
+    return _posts.length > 0
+        ? SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: true,
+            header: WaterDropMaterialHeader(),
+            controller: _refreshController,
+            onRefresh: _onRefresh,
+            onLoading: _onLoading,
+            child: GridView.count(
+                crossAxisCount: _gridLayout ? 1 : 2,
+                mainAxisSpacing: 5.0,
+                crossAxisSpacing: 5.0,
+                childAspectRatio: 2.0 / 2.1,
+                children: _posts
+                    .map((post) => PostWidget(
+                          gridLayout: _gridLayout,
+                          createdAt: post["createdAt"],
+                          enquiryCount: post["enquiryCount"],
+                          description: post["description"],
+                          id: post["id"],
+                          imageUrl: post["imageUrl"],
+                          likeCount: post["likeCount"],
+                          likes: List<String>.from(post["likes"]),
+                          owner: post["owner"],
+                          status: post["status"],
+                          title: post["title"],
+                          updatedAt: post["updatedAt"],
+                          userId: this._uid,
+                        ))
+                    .toList()),
+          )
+        : Center(
+            child: Text("No Posts"),
+          );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -269,13 +306,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
 
   @override
   Widget build(BuildContext context) {
-    this.isUserLogedIn().then((logedIn) {
-      if (!logedIn) {
-        Navigator.of(context).pushNamed("/");
-      } else {
-        this.setUserType();
-      }
-    });
+    // this.isLogedIn(context);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -294,36 +325,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
         ),
         body: Stack(
           children: <Widget>[
-            SmartRefresher(
-              enablePullDown: true,
-              enablePullUp: true,
-              header: WaterDropMaterialHeader(),
-              controller: _refreshController,
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
-              child: GridView.count(
-                  crossAxisCount: _gridLayout ? 1 : 2,
-                  mainAxisSpacing: 5.0,
-                  crossAxisSpacing: 5.0,
-                  childAspectRatio: 2.0 / 2.1,
-                  children: _posts
-                      .map((post) => PostWidget(
-                            gridLayout: _gridLayout,
-                            createdAt: post["createdAt"],
-                            enquiryCount: post["enquiryCount"],
-                            description: post["description"],
-                            id: post["id"],
-                            imageUrl: post["imageUrl"],
-                            likeCount: post["likeCount"],
-                            likes: List<String>.from(post["likes"]),
-                            owner: post["owner"],
-                            status: post["status"],
-                            title: post["title"],
-                            updatedAt: post["updatedAt"],
-                            userId: this._uid,
-                          ))
-                      .toList()),
-            ),
+            _postItems(),
             _filterListItems(),
           ],
         ),

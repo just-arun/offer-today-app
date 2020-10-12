@@ -38,18 +38,18 @@ mixin AuthMixin {
   void isLogedIn(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final bool hasToken = prefs.getString("accessToken") != null;
+    print(hasToken);
     if (!hasToken) {
       Navigator.of(context).popAndPushNamed("/");
     } else
       ;
   }
 
-
   void isUserLoggedin(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final bool hasToken = prefs.getString("accessToken") != null;
     if (hasToken) {
-      Navigator.of(context).popAndPushNamed("/");
+      Navigator.of(context).popAndPushNamed("/home");
     } else
       ;
   }
