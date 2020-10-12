@@ -135,11 +135,11 @@ class _CreatePostState extends State<CreatePost> with PostMixin {
 
   void _savePost() async {
     if (_formKey.currentState.validate()) {
-      if (this._imagePath == null) {
+      String tagId = this._getTagId();
+      print("tagId ${tagId.runtimeType}, _imagePath: ${_imagePath.runtimeType}");
+      if (this._imagePath == "" || tagId == "") {
         return;
       }
-      String tagId = this._getTagId();
-      print(tagId);
       await this
           .createPost(
             this._description,

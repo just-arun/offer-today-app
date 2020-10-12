@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:offer_today/mixins/auth_mixin.dart';
 import 'package:offer_today/mixins/user_mixin.dart';
 import 'package:offer_today/services/modules/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,10 +14,12 @@ class UserDetail extends StatefulWidget {
   _UserDetailState createState() => _UserDetailState();
 }
 
-class _UserDetailState extends State<UserDetail> with UserMixin {
+class _UserDetailState extends State<UserDetail> with UserMixin, AuthMixin {
   final _formKey = GlobalKey<FormState>();
   bool _edit = false;
   int _currentUserType = 0;
+  bool viewer = true;
+  int userType = 0;
 
   TextEditingController _id = TextEditingController(text: "");
   TextEditingController _userName = TextEditingController(text: "");
@@ -150,9 +153,20 @@ class _UserDetailState extends State<UserDetail> with UserMixin {
         : SizedBox();
   }
 
+  void setUserType() async {
+    // viewer only
+    bool viewOnly = await this.viewOnlyUser();
+    int type = await this.userStatus();
+    setState(() {
+      viewer = viewOnly;
+      userType = type;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    this.setUserType();
     this.initFun();
   }
 
