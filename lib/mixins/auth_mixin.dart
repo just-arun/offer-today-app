@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 mixin AuthMixin {
@@ -32,5 +33,24 @@ mixin AuthMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     return;
+  }
+
+  void isLogedIn(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool hasToken = prefs.getString("accessToken") != null;
+    if (!hasToken) {
+      Navigator.of(context).popAndPushNamed("/");
+    } else
+      ;
+  }
+
+
+  void isUserLoggedin(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool hasToken = prefs.getString("accessToken") != null;
+    if (hasToken) {
+      Navigator.of(context).popAndPushNamed("/");
+    } else
+      ;
   }
 }
