@@ -76,16 +76,16 @@ class _DashboardPageState extends State<DashboardPage> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.supervised_user_circle),
-              title: Text("Users"),
+              label: "Users",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings_applications),
-              title: Text("Manage"),
+              label: "Manage",
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.data_usage),
-              title: Text("Data"),
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.data_usage),
+            //   label: "Data",
+            // ),
           ]),
     );
   }

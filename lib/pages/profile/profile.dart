@@ -27,6 +27,8 @@ class _ProfilePageState extends State<ProfilePage> with UserMixin, AuthMixin {
   int _page = 0;
   File _image;
   String _imagePath;
+  bool viewer = true;
+  int userType = 0;
   TextEditingController _descriptionController =
       new TextEditingController(text: "");
 
@@ -138,6 +140,16 @@ class _ProfilePageState extends State<ProfilePage> with UserMixin, AuthMixin {
     print("save profile");
   }
 
+  void setUserType() async {
+    // viewer only
+    bool viewOnly = await this.viewOnlyUser();
+    int type = await this.userStatus();
+    setState(() {
+      viewer = viewOnly;
+      userType = type;
+    });
+  }
+
   void initFun() async {
     setState(() {
       tabList.add(UserDetail(
@@ -158,10 +170,39 @@ class _ProfilePageState extends State<ProfilePage> with UserMixin, AuthMixin {
     });
   }
 
+  List<BottomNavigationBarItem> _postsTag() {
+    return userType != 0
+        ? [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              label: "Profile",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: "Favorites",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.view_list),
+              label: "Posts",
+            ),
+          ]
+        : [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              label: "Profile",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: "Favorites",
+            ),
+          ];
+  }
+
   @override
   void initState() {
     super.initState();
     this.initFun();
+    this.setUserType();
     // this.isLogedin(context);
   }
 
@@ -178,20 +219,7 @@ class _ProfilePageState extends State<ProfilePage> with UserMixin, AuthMixin {
           currentIndex: _page,
           selectedItemColor: Colors.amber[800],
           onTap: _onItemTapped,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              title: Text("Profile"),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              title: Text("Favorites"),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.view_list),
-              title: Text("Posts"),
-            ),
-          ],
+          items: _postsTag(),
         ),
       ),
     );
