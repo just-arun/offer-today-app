@@ -155,4 +155,17 @@ class PostService {
       throw err;
     }
   }
+
+  Future delete(String id) async {
+    try {
+      final res = await this._apiService
+      .methodDelete("/posts/$id");
+      if (res.statusCode < 400) {
+        return res;
+      }
+      throw res;
+    } catch (err) {
+      throw err;
+    }
+  }
 }

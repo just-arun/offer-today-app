@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:offer_today/mixins/auth_mixin.dart';
 import 'package:offer_today/mixins/posts_mixin.dart';
 import 'package:offer_today/pages/post/comments/comments.dart';
 import 'package:offer_today/pages/post/comments/comments_list.dart';
 import 'package:offer_today/pages/post/comments/create_comment.dart';
 import 'package:offer_today/services/config/app_config.dart';
+import 'package:offer_today/services/modules/post_service.dart';
 import 'package:offer_today/widgets/popup_dialog/popup_dialog.dart';
 import 'package:offer_today/widgets/users/avatar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +19,7 @@ class PostDetailPage extends StatefulWidget {
   _PostDetailPageState createState() => _PostDetailPageState();
 }
 
-class _PostDetailPageState extends State<PostDetailPage> with PostMixin {
+class _PostDetailPageState extends State<PostDetailPage> with PostMixin, AuthMixin {
   Map<String, dynamic> data = {
     "id": "",
     "likeCount": 0,
@@ -57,15 +59,26 @@ class _PostDetailPageState extends State<PostDetailPage> with PostMixin {
     }
   }
 
+  void _delete() async {
+    try {
+      final res = await PostService().delete(data["id"]);
+      print(res);
+      Navigator.of(context).popAndPushNamed("/home");
+    } catch (err) {
+      print(err);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     this.initFun();
+    // this.isLogedin(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    print("${data['imageUrl']}, ${data['likeCount']}, ${data['title']}");
+    // this.isLogedin(context);
     return Scaffold(
         appBar: AppBar(
           title: Text("${data['title']}"),
@@ -76,7 +89,7 @@ class _PostDetailPageState extends State<PostDetailPage> with PostMixin {
                       Icons.delete,
                       color: Colors.red,
                     ),
-                    onPressed: () {})
+                    onPressed: () => this._delete())
                 : SizedBox(),
           ],
         ),

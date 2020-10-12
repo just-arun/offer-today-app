@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:offer_today/mixins/auth_mixin.dart';
 import 'package:offer_today/mixins/user_mixin.dart';
 import 'package:offer_today/pages/post/post-detail.dart';
 import 'package:offer_today/pages/profile/user-detail/user-detail.dart';
@@ -21,15 +23,32 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState(userID: this.userID);
 }
 
-class _ProfilePageState extends State<ProfilePage> with UserMixin {
+class _ProfilePageState extends State<ProfilePage> with UserMixin, AuthMixin {
   int _page = 0;
   File _image;
   String _imagePath;
   TextEditingController _descriptionController =
       new TextEditingController(text: "");
-  TextEditingController _description = new TextEditingController(text: "");
-  TextEditingController _email = new TextEditingController(text: "");
-  TextEditingController _userName = new TextEditingController(text: "");
+
+  TextEditingController _userNameController = TextEditingController(text: "");
+  TextEditingController _emailController = TextEditingController(text: "");
+  TextEditingController _registrationNumberController =
+      TextEditingController(text: "");
+  TextEditingController _addressController = TextEditingController(text: "");
+  TextEditingController _poBoxController = TextEditingController(text: "");
+  TextEditingController phoneController = TextEditingController(text: "");
+  TextEditingController faxController = TextEditingController(text: "");
+  TextEditingController mobileController = TextEditingController(text: null);
+  TextEditingController registrationDateController =
+      TextEditingController(text: "");
+  TextEditingController subscriptionController =
+      TextEditingController(text: "");
+  TextEditingController paymentTermsController =
+      TextEditingController(text: "");
+  TextEditingController contactPersonController =
+      TextEditingController(text: "");
+  TextEditingController contactPersonDescriptionController =
+      TextEditingController(text: "");
   String _imageUrl;
   bool _editProfile = false;
   final userID;
@@ -109,7 +128,10 @@ class _ProfilePageState extends State<ProfilePage> with UserMixin {
   }
 
   String _avatarText() {
-    return _userName.text.split(" ").map((e) => e[0].toUpperCase()).join();
+    return _userNameController.text
+        .split(" ")
+        .map((e) => e[0].toUpperCase())
+        .join();
   }
 
   void _savePorfile() async {
@@ -128,17 +150,6 @@ class _ProfilePageState extends State<ProfilePage> with UserMixin {
         this.userID,
       ));
     });
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    this.getProfile();
-    String email = pref.getString("email");
-    String userName = pref.getString("userName");
-    String imageUrl = pref.getString("imageUrl");
-    print("$email, $userName, $imageUrl");
-    setState(() {
-      _email = TextEditingController(text: email);
-      _userName = TextEditingController(text: userName);
-      _imageUrl = imageUrl;
-    });
   }
 
   void _onItemTapped(int index) {
@@ -151,10 +162,12 @@ class _ProfilePageState extends State<ProfilePage> with UserMixin {
   void initState() {
     super.initState();
     this.initFun();
+    // this.isLogedin(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    // this.isLogedin(context);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
