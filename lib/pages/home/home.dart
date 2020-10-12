@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
   List<Map<String, dynamic>> _tagList = [];
   bool _filter = false;
   String _selectedTag = "";
+  bool _logout = false;
 
   String _userName;
   String _imageUrl;
@@ -208,7 +209,9 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
                 Navigator.pop(context);
                 switch (item["onTap"]) {
                   case "logout":
-                    this._logoutUser();
+                    setState(() {
+                      _logout = true;
+                    });
                     break;
                   case "profile":
                     this._profilePage();
@@ -297,6 +300,77 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
           );
   }
 
+  Widget _logoutDialog() {
+    return _logout
+        ? Stack(
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    _logout = false;
+                  });
+                },
+                child: Container(
+                  color: Color.fromRGBO(0, 0, 0, 0.2),
+                ),
+              ),
+              Center(
+                child: Container(
+                  height: 150,
+                  width: 260,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5.0)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Logout",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25.0,
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          "Do you realy want to logout of offer today applicaion.",
+                          style: GoogleFonts.poppins(fontSize: 14.0),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          MaterialButton(
+                            onPressed: () {
+                              setState(() {
+                                _logout = false;
+                              });
+                            },
+                            child: Text("CANCEL"),
+                          ),
+                          Spacer(),
+                          MaterialButton(
+                            onPressed: () => this._logoutUser(),
+                            child: Text(
+                              "LOGOUT",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            color: Colors.red,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )
+        : SizedBox();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -307,7 +381,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
 
   @override
   Widget build(BuildContext context) {
-    // this.isLogedIn(context);
+    this.isLogedIn(context);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -328,17 +402,25 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
           children: <Widget>[
             _postItems(),
             _filterListItems(),
+            _logoutDialog(),
           ],
         ),
         drawer: DrawerWidget(
-            uid: this._uid,
-            imageUrl: this._imageUrl,
-            userName: this._userName,
-            userType: this.userType),
+          uid: this._uid,
+          imageUrl: this._imageUrl,
+          userName: this._userName,
+          userType: this.userType,
+          logoutEvent: () {
+            Navigator.pop(context);
+            setState(() {
+              _logout = true;
+            });
+          },
+        ),
         floatingActionButton: !viewer
             ? FloatingActionButton(
                 onPressed: () =>
-                    Navigator.of(context).popAndPushNamed("/create-post"),
+                    Navigator.of(context).pushNamed("/create-post"),
                 child: Icon(Icons.add),
               )
             : null,

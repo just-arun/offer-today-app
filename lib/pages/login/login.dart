@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:offer_today/mixins/auth_mixin.dart';
 import 'package:offer_today/mixins/user_mixin.dart';
 import 'package:offer_today/widgets/login/login_form_card.dart';
 import 'package:offer_today/widgets/popup_dialog/popup_dialog.dart';
@@ -10,7 +11,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with UserMixin {
+class _LoginPageState extends State<LoginPage> with UserMixin, AuthMixin {
   LoginFormCardType _formType = LoginFormCardType.login;
   String userName;
   String email;
@@ -163,6 +164,8 @@ class _LoginPageState extends State<LoginPage> with UserMixin {
       height: 1334,
       allowFontScaling: true,
     );
+
+    this.isUserLoggedin(context);
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,

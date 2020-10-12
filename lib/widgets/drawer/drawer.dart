@@ -14,6 +14,7 @@ class DrawerWidget extends StatelessWidget {
   final String imageUrl;
   final String uid;
   final int userType;
+  final Function logoutEvent;
   String _profileUserID;
 
   DrawerWidget({
@@ -21,6 +22,7 @@ class DrawerWidget extends StatelessWidget {
     this.imageUrl,
     this.uid,
     this.userType,
+    @required this.logoutEvent,
   });
 
   List<Map<String, dynamic>> _listTile = [
@@ -56,9 +58,7 @@ class DrawerWidget extends StatelessWidget {
   }
 
   void _logout(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    Navigator.of(context).popAndPushNamed("/");
+    this.logoutEvent();
   }
 
   @override
@@ -116,9 +116,7 @@ class DrawerWidget extends StatelessWidget {
                 LoginFormSubmitButton(
                   text: "LOGOUT",
                   onTap: () {
-                    print(theme);
                     this._logout(context);
-                    // context.bloc<ThemeCubit>().toggleTheme();
                   },
                 ),
                 SizedBox(
