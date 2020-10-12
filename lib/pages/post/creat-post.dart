@@ -147,7 +147,7 @@ class _CreatePostState extends State<CreatePost> with PostMixin {
             this._title,
             tagId,
           )
-          .then((res) => {Navigator.of(context).pushNamed("/home")});
+          .then((res) => {Navigator.of(context).popAndPushNamed("/home")});
     }
   }
 

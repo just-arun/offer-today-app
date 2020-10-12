@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
 
   void _logoutUser() {
     this.logout();
-    Navigator.of(context).pushNamed("/");
+    Navigator.of(context).popAndPushNamed("/");
   }
 
   void _profilePage() {
@@ -301,6 +301,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
   void initState() {
     super.initState();
     this.initFun();
+    this.setUserType();
     this.getUserPorfile();
   }
 
@@ -337,7 +338,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
         floatingActionButton: !viewer
             ? FloatingActionButton(
                 onPressed: () =>
-                    Navigator.of(context).pushNamed("/create-post"),
+                    Navigator.of(context).popAndPushNamed("/create-post"),
                 child: Icon(Icons.add),
               )
             : null,

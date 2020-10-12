@@ -16,7 +16,7 @@ mixin UserMixin {
       );
       if (res.statusCode == 200) {
         this.getProfile().then((res) {
-          Navigator.of(context).pushNamed("/home");
+          Navigator.of(context).popAndPushNamed("/home");
           return;
         }).catchError((err) {
           print(err);
@@ -67,7 +67,7 @@ mixin UserMixin {
       );
       if (res.statusCode == 201) {
         await this.getProfile().then((res) {
-          Navigator.of(context).pushNamed("/home");
+          Navigator.of(context).popAndPushNamed("/home");
           return;
         }).catchError((err) {
           final String errorMessage = jsonDecode(err.body)["error"]["message"];
