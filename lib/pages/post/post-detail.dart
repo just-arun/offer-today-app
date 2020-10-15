@@ -33,7 +33,7 @@ class _PostDetailPageState extends State<PostDetailPage> with PostMixin, AuthMix
 
   void _getComment() async {
     try {
-      final comments = await this.getComments(widget.id);
+      final comments = await this.getComments(context, widget.id);
       setState(() {
         _comments = comments;
       });
@@ -47,7 +47,7 @@ class _PostDetailPageState extends State<PostDetailPage> with PostMixin, AuthMix
       SharedPreferences pref = await SharedPreferences.getInstance();
       final userID = pref.getString("uid");
       final uType = pref.getInt("userType");
-      final post = await this.getOnePost(widget.id);
+      final post = await this.getOnePost(context, widget.id);
       this._getComment();
       setState(() {
         data = post;

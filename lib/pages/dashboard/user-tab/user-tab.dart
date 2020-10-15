@@ -16,7 +16,7 @@ class _UserTabeState extends State<UserTabe> with UserMixin {
 
   void initFun() async {
     try {
-      final user = await this.getAllUsers();
+      final user = await this.getAllUsers(context);
       setState(() {
         users = user;
       });

@@ -18,7 +18,7 @@ class _ManagePostState extends State<ManagePost> with PostMixin {
       setState(() {
         _loading = true;
       });
-      final res = await this.getTags();
+      final res = await this.getTags(context);
       setState(() {
         _loading = false;
         _items = res;
@@ -33,7 +33,7 @@ class _ManagePostState extends State<ManagePost> with PostMixin {
       setState(() {
         _loading = true;
       });
-      final res = await this.createTag(_name.text);
+      final res = await this.createTag(context, _name.text);
       print(res);
       setState(() {
         _name.text = "";
@@ -49,7 +49,7 @@ class _ManagePostState extends State<ManagePost> with PostMixin {
       setState(() {
         _loading = true;
       });
-      final res = await this.deleteTag(id);
+      final res = await this.deleteTag(context, id);
       print(res);
       this.initFun();
     } catch (err) {

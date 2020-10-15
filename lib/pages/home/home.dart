@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
       _page = 1;
       this._posts = [];
     });
-    final res = await this.getPosts(this._page, this._selectedTag);
+    final res = await this.getPosts(context, this._page, this._selectedTag);
     setState(() {
       this._posts = res;
     });
@@ -69,8 +69,8 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
 
   void setUserType() async {
     // viewer only
-    bool viewOnly = await this.viewOnlyUser();
-    int type = await this.userStatus();
+    bool viewOnly = await this.viewOnlyUser(context);
+    int type = await this.userStatus(context);
     setState(() {
       viewer = viewOnly;
       userType = type;
@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
   }
 
   void nextPage() async {
-    await this.getPosts(this._page, this._selectedTag).then((res) {
+    await this.getPosts(context, this._page, this._selectedTag).then((res) {
       if (res.length < 1) {
         setState(() {
           _page = _page - 1;
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
   }
 
   void _logoutUser() {
-    this.logout();
+    this.logout(context);
     Navigator.of(context).popAndPushNamed("/");
   }
 
@@ -253,7 +253,7 @@ class _HomePageState extends State<HomePage> with PostMixin, AuthMixin {
 
   void _getTags() async {
     try {
-      final data = await this.getTags();
+      final data = await this.getTags(context);
       print(data);
       setState(() {
         _tagList = data as List<Map<String, dynamic>>;

@@ -142,8 +142,8 @@ class _ProfilePageState extends State<ProfilePage> with UserMixin, AuthMixin {
 
   void setUserType() async {
     // viewer only
-    bool viewOnly = await this.viewOnlyUser();
-    int type = await this.userStatus();
+    bool viewOnly = await this.viewOnlyUser(context);
+    int type = await this.userStatus(context);
     setState(() {
       viewer = viewOnly;
       userType = type;

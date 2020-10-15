@@ -12,7 +12,7 @@ class CommentList extends StatefulWidget {
 class _CommentListState extends State<CommentList> with PostMixin {
   void initFun() async {
     try {
-      final data = await this.getComments(widget.postId);
+      final data = await this.getComments(context, widget.postId);
       print(data);
     } catch (err) {
       print(err);

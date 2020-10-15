@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 mixin AuthMixin {
-  Future<bool> isUserLogedIn() async {
+  Future<bool> isUserLogedIn(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String token = prefs.getString("accessToken");
     if (token == null) {
@@ -12,7 +12,7 @@ mixin AuthMixin {
     }
   }
 
-  Future<bool> viewOnlyUser() async {
+  Future<bool> viewOnlyUser(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final int userType = prefs.getInt("userType");
     final bool view = userType == 0;
@@ -23,13 +23,13 @@ mixin AuthMixin {
     }
   }
 
-  Future<int> userStatus() async {
+  Future<int> userStatus(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final int userType = prefs.getInt("userType");
     return userType;
   }
 
-  void logout() async {
+  void logout(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     return;

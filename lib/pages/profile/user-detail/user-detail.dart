@@ -53,7 +53,7 @@ class _UserDetailState extends State<UserDetail> with UserMixin, AuthMixin {
       setState(() {
         _currentUserType = pref.getInt("userType");
       });
-      final res = await this.getOneUser(widget.userID);
+      final res = await this.getOneUser(context, widget.userID);
       final id = res["id"];
       final userName = res["userName"];
       final email = res["email"];
@@ -127,7 +127,7 @@ class _UserDetailState extends State<UserDetail> with UserMixin, AuthMixin {
       final json = jsonEncode(data);
       print("[JSON DATA] $json");
       if (this._formKey.currentState.validate()) {
-        final res = await this.updateProfile(widget.userID, json);
+        final res = await this.updateProfile(context, widget.userID, json);
         print(res);
       }
     } catch (err) {
@@ -155,8 +155,8 @@ class _UserDetailState extends State<UserDetail> with UserMixin, AuthMixin {
 
   void setUserType() async {
     // viewer only
-    bool viewOnly = await this.viewOnlyUser();
-    int type = await this.userStatus();
+    bool viewOnly = await this.viewOnlyUser(context);
+    int type = await this.userStatus(context);
     setState(() {
       viewer = viewOnly;
       userType = type;

@@ -75,14 +75,14 @@ class HttpService {
       if (res.statusCode <= 400) {
         return res;
       }
-      if (res.statusCode == 401) {
-        final resData = await this._updateToken();
-        if (resData) {
-          return this.methodGet(path);
-        } else {
-          throw res;
-        }
-      }
+      // if (res.statusCode == 401) {
+      //   final resData = await this._updateToken();
+      //   if (resData) {
+      //     return this.methodGet(path);
+      //   } else {
+      //     throw res;
+      //   }
+      // }
       throw res;
     } catch (e) {
       throw e;
@@ -106,15 +106,15 @@ class HttpService {
       if (access != null) {
         this._setTokens(access, refresh);
       }
-      if (res.statusCode == 401) {
-        return _updateToken().then((resData) {
-          if (resData) {
-            return this.methodPost(path, body);
-          } else {
-            throw res;
-          }
-        });
-      }
+      // if (res.statusCode == 401) {
+      //   return _updateToken().then((resData) {
+      //     if (resData) {
+      //       return this.methodPost(path, body);
+      //     } else {
+      //       throw res;
+      //     }
+      //   });
+      // }
       if (res.statusCode <= 400) {
         return res;
       }
@@ -141,15 +141,15 @@ class HttpService {
       if (access != null) {
         this._setTokens(access, refresh);
       }
-      if (res.statusCode == 401) {
-        return _updateToken().then((resData) {
-          if (resData) {
-            return this.methodPut(path, body);
-          } else {
-            throw res;
-          }
-        });
-      }
+      // if (res.statusCode == 401) {
+      //   return _updateToken().then((resData) {
+      //     if (resData) {
+      //       return this.methodPut(path, body);
+      //     } else {
+      //       throw res;
+      //     }
+      //   });
+      // }
       if (res.statusCode <= 400) {
         return res;
       }
@@ -176,15 +176,15 @@ class HttpService {
       if (access != null) {
         this._setTokens(access, refresh);
       }
-      if (res.statusCode == 401) {
-        return _updateToken().then((resData) {
-          if (resData) {
-            return this.methodPatch(path, body);
-          } else {
-            throw res;
-          }
-        });
-      }
+      // if (res.statusCode == 401) {
+      //   return _updateToken().then((resData) {
+      //     if (resData) {
+      //       return this.methodPatch(path, body);
+      //     } else {
+      //       throw res;
+      //     }
+      //   });
+      // }
       if (res.statusCode <= 400) {
         return res;
       }
@@ -210,15 +210,15 @@ class HttpService {
       if (access != null) {
         this._setTokens(access, refresh);
       }
-      if (res.statusCode == 401) {
-        return _updateToken().then((resData) {
-          if (resData) {
-            return this.methodDelete(path);
-          } else {
-            throw res;
-          }
-        });
-      }
+      // if (res.statusCode == 401) {
+      //   return _updateToken().then((resData) {
+      //     if (resData) {
+      //       return this.methodDelete(path);
+      //     } else {
+      //       throw res;
+      //     }
+      //   });
+      // }
       if (res.statusCode <= 400) {
         return res;
       }

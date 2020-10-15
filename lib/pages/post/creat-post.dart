@@ -78,7 +78,7 @@ class _CreatePostState extends State<CreatePost> with PostMixin {
 
   void _getTags() async {
     try {
-      final result = await this.getTags();
+      final result = await this.getTags(context);
       final List<String> tags = ["Select Tag"];
       result.forEach((ele) {
         tags.add(ele["name"]);
@@ -142,6 +142,7 @@ class _CreatePostState extends State<CreatePost> with PostMixin {
       }
       await this
           .createPost(
+            context,
             this._description,
             this._imagePath,
             this._title,

@@ -7,6 +7,19 @@ import 'package:offer_today/services/modules/user_service.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+void logoutRedirect(BuildContext context, err) async {
+  var code = err.statusCode;
+  if (code == null) {
+    return;
+  }
+  if (code == 401 || code == 403) {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.clear();
+    Navigator.of(context).popAndPushNamed("/");
+    return;
+  }
+}
+
 mixin UserMixin {
   void login(BuildContext context, String email, String password) async {
     try {
@@ -15,7 +28,7 @@ mixin UserMixin {
         password,
       );
       if (res.statusCode == 200) {
-        this.getProfile().then((res) {
+        this.getProfile(context).then((res) {
           Navigator.of(context).popAndPushNamed("/home");
           return;
         }).catchError((err) {
@@ -39,6 +52,7 @@ mixin UserMixin {
         throw res;
       }
     } catch (err) {
+        logoutRedirect(context, err);
       String errorMessage;
       if (err.body != null) {
         errorMessage = jsonDecode(err.body)["error"]["message"];
@@ -66,7 +80,7 @@ mixin UserMixin {
         password,
       );
       if (res.statusCode == 201) {
-        await this.getProfile().then((res) {
+        await this.getProfile(context).then((res) {
           Navigator.of(context).popAndPushNamed("/home");
           return;
         }).catchError((err) {
@@ -83,6 +97,7 @@ mixin UserMixin {
       }
       return;
     } catch (err) {
+        logoutRedirect(context, err);
       String errorMessage;
       if (err.body != null) {
         errorMessage = jsonDecode(err.body)["error"]["message"];
@@ -98,7 +113,8 @@ mixin UserMixin {
     }
   }
 
-  Future updateProfile(String userID, dynamic data) async {
+  Future updateProfile(
+      BuildContext context, String userID, dynamic data) async {
     try {
       final res = await UserService().updateMinilalProfile(userID, data);
       if (res.statusCode < 400) {
@@ -106,11 +122,14 @@ mixin UserMixin {
       }
       throw res;
     } catch (err) {
+        logoutRedirect(context, err);
       print(err);
     }
   }
 
-  Future getProfile() async {
+  Future getProfile(
+    BuildContext context,
+  ) async {
     try {
       final res = await UserService().getProfile();
       print(res.statusCode);
@@ -138,6 +157,7 @@ mixin UserMixin {
       }
       return;
     } catch (err) {
+        logoutRedirect(context, err);
       print(err);
       String errorMessage;
       if (err.body != null) {
@@ -154,7 +174,9 @@ mixin UserMixin {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAllUsers() async {
+  Future<List<Map<String, dynamic>>> getAllUsers(
+    BuildContext context,
+  ) async {
     try {
       final result = await UserService().getAllUsers();
       final json = jsonDecode(result.body)["data"];
@@ -162,12 +184,14 @@ mixin UserMixin {
       final data = List<Map<String, dynamic>>.from(json);
       return data;
     } catch (err) {
+        logoutRedirect(context, err);
       print(err);
       throw err;
     }
   }
 
-  Future<Map<String, dynamic>> getOneUser(String id) async {
+  Future<Map<String, dynamic>> getOneUser(
+      BuildContext context, String id) async {
     try {
       final result = await UserService().getUser(id);
       print(result.body);
@@ -176,9 +200,9 @@ mixin UserMixin {
       print(data);
       return data;
     } catch (err) {
+        logoutRedirect(context, err);
       print(err);
       throw err;
     }
   }
-
 }
