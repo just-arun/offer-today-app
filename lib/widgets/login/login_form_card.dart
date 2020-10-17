@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,6 +18,7 @@ class LoginFormCard extends StatelessWidget {
   final String email;
   final String password;
   final String password1;
+  final int otp;
   final Function(String name, String value) updateFormField;
 
   LoginFormCard({
@@ -27,6 +29,7 @@ class LoginFormCard extends StatelessWidget {
     this.password,
     this.password1,
     this.updateFormField,
+    this.otp,
   });
 
   Widget _emailWidget() {
@@ -195,6 +198,46 @@ class LoginFormCard extends StatelessWidget {
     return SizedBox();
   }
 
+
+  Widget _otpWidget() {
+    if (type == LoginFormCardType.updatePassword) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            height: ScreenUtil().setHeight(20.0),
+          ),
+          Text(
+            "OPT",
+            style: GoogleFonts.poppins(
+              color: Colors.black54,
+              fontWeight: FontWeight.w600,
+              fontSize: ScreenUtil().setSp(26),
+            ),
+          ),
+          TextFormField(
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter OTP';
+              }
+              return null;
+            },
+            onChanged: (val) => this.updateFormField("otp", val),
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              hintText: "OTP from email",
+              hintStyle: TextStyle(
+                color: Colors.grey,
+                fontSize: 12.0,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return SizedBox();
+  }
+
   Widget _forgotPassword() {
     switch (type) {
       case LoginFormCardType.login:
@@ -296,6 +339,7 @@ class LoginFormCard extends StatelessWidget {
             ),
             _userName(),
             _emailWidget(),
+            _otpWidget(),
             _passwordWidget(),
             _password1Widget(),
             _forgotPassword(),

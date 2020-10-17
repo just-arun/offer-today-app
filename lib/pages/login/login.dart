@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:offer_today/mixins/auth_mixin.dart';
 import 'package:offer_today/mixins/user_mixin.dart';
+import 'package:offer_today/services/modules/auth_service.dart';
 import 'package:offer_today/widgets/login/login_form_card.dart';
 import 'package:offer_today/widgets/popup_dialog/popup_dialog.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -17,6 +19,7 @@ class _LoginPageState extends State<LoginPage> with UserMixin, AuthMixin {
   String email;
   String password;
   String password1;
+  int otp;
   final _formControl = GlobalKey<FormState>();
   bool loading = false;
 
@@ -61,15 +64,46 @@ class _LoginPageState extends State<LoginPage> with UserMixin, AuthMixin {
           );
           break;
         case LoginFormCardType.forgotPassword:
-          // TODO: Handle this case.
+          this.forgotPassowrd();
           break;
         case LoginFormCardType.updatePassword:
-          // TODO: Handle this case.
+          this.updatePassword();
           break;
       }
       setState(() {
         this.loading = false;
       });
+    }
+  }
+
+  void forgotPassowrd() async {
+    try {
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setString("email", email);
+      final res = await AuthService().forgotPassword(email);
+      print(res);
+      setState(() {
+        _formType = LoginFormCardType.updatePassword;
+      });
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  void updatePassword() async {
+    try {
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setString(
+        "email",
+        email,
+      );
+      final res = await AuthService().updatePassword(email, password, otp);
+      print(res);
+      setState(() {
+        _formType = LoginFormCardType.login;
+      });
+    } catch (err) {
+      print(err);
     }
   }
 
@@ -127,7 +161,7 @@ class _LoginPageState extends State<LoginPage> with UserMixin, AuthMixin {
     }
   }
 
-  void _updateFormField(String name, String value) {
+  void _updateFormField(String name, value) {
     switch (name) {
       case "userName":
         setState(() {
@@ -147,6 +181,11 @@ class _LoginPageState extends State<LoginPage> with UserMixin, AuthMixin {
       case "password1":
         setState(() {
           password1 = value;
+        });
+        return;
+      case "otp":
+        setState(() {
+          otp = value;
         });
         return;
     }
@@ -206,6 +245,7 @@ class _LoginPageState extends State<LoginPage> with UserMixin, AuthMixin {
                             userName: this.userName,
                             password1: this.password1,
                             password: this.password,
+                            otp: this.otp,
                             updateFormField: _updateFormField,
                           ),
                           SizedBox(height: ScreenUtil().setHeight(50)),

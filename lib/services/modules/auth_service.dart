@@ -42,4 +42,43 @@ class AuthService {
       throw e;
     }
   }
+
+  Future<http.Response> forgotPassword(String email) async {
+    try {
+      final result = await this._apiService.methodPost(
+            "/auth/forgot-password",
+            jsonEncode(
+              {"email": email},
+            ),
+          );
+      print(result.statusCode);
+      if (result.statusCode < 400) {
+        return result;
+      }
+      throw result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+
+  Future<http.Response> updatePassword(String email, String password, int otp) async {
+    try {
+      final result = await this._apiService.methodPost(
+            "/update-password",
+            jsonEncode(
+              {"email": email, "password": password, "otp": otp},
+            ),
+          );
+      print(result.statusCode);
+      if (result.statusCode < 400) {
+        return result;
+      }
+      throw result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // /update-password
 }
