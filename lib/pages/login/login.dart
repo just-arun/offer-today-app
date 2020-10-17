@@ -103,6 +103,9 @@ class _LoginPageState extends State<LoginPage> with UserMixin, AuthMixin {
         _formType = LoginFormCardType.login;
       });
     } catch (err) {
+      setState(() {
+        _formType = LoginFormCardType.login;
+      });
       print(err);
     }
   }
